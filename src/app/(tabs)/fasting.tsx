@@ -76,10 +76,10 @@ const onPressEnd = () => {
       </View>
       {tips.map((tip) => (
         <Tips
-          key={tip.index}
-          title={tip.title as string}
-          content={tip.content as string}
-          emoji={tip.emoji as string}
+          key={tip.id}
+          title={tip.title}
+          content={tip.content}
+          emoji={tip.emoji}
         />
       ))}
     </ScrollView>

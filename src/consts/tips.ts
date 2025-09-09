@@ -1,48 +1,48 @@
-export const tips: Array<Record<string, string | number >> = [
+export const tips: Array<Record<string, string>> = [
   {
-    index: 0,
+    id: 'tips-1',
     title: "Mantenha-se hidratado",
     content: "Beba bastante água durante o jejum para manter-se hidratado.",
     emoji: "💧"
   },
   {
-    index: 1,
+    id: 'tips-2',
     title: "Cuidado ao se realimentar",
     content: "Evite alimentos processados e ricos em açúcar durante o período de alimentação.",
     emoji: "🥗"
   },
   {
-    index: 2,
+    id: 'tips-3',
     title: "Tenha uma alimentação balanceada",
     content: "Inclua alimentos ricos em fibras, como frutas, vegetais e grãos integrais, para ajudar na saciedade.",
     emoji: "🍎"
   },
   {
-    index: 3,
+    id: 'tips-4',
     title: "Descanse longe de telas",
     content: "Durma bem, pois o sono adequado é essencial para o sucesso do jejum.",
     emoji: "😴"
   },
   {
-    index: 4,
+    id: 'tips-5',
     title: "Comece devagar",
     content: "Comece com jejuns mais curtos e aumente gradualmente a duração conforme seu corpo se adapta.",
     emoji: "🐢"
   },
   {
-    index: 5,
+    id: 'tips-6',
     title: "Ouça seu corpo",
     content: "Ouça seu corpo e interrompa o jejum se sentir tonturas, fraqueza extrema ou outros sintomas preocupantes.",
     emoji: "👂"
   },
   {
-    index: 6,
+    id: 'tips-7',
     title: "Faça atividades",
     content: "Mantenha-se ocupado durante o período de jejum para evitar pensar em comida.",
     emoji: "🎯"
   },
   {
-    index: 7,
+    id: 'tips-8',
     title: "Consulte seu médico",
     content: "Consulte um profissional de saúde antes de iniciar qualquer regime de jejum, especialmente se tiver condições médicas preexistentes.",
     emoji: "👩‍⚕️"
