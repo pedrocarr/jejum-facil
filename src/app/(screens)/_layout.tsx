@@ -14,12 +14,15 @@ export default function ScreensLayout() {
       options={{
           headerTitle: "Informações",
           headerTitleStyle: { color: "black", fontSize: 24 },
+          presentation: "modal",
+          animation: "slide_from_bottom",
         }}
       />
       <Stack.Screen name="plans"
       options={{
           headerTitle: "Planos de Jejum",
           headerTitleStyle: { color: "black", fontSize: 24 },
+          animation: "slide_from_right",
         }}
       />
     </Stack>

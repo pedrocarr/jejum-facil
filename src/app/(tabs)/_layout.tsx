@@ -1,11 +1,13 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Tabs } from "expo-router";
-import { navigate } from "expo-router/build/global-state/routing";
+import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 
+const router = useRouter();
+
 const onPressInfo = () => {
-  navigate("/info");
+  router.push("/info");
 }
 
 const showInfo = () => {

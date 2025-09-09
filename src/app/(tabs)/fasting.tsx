@@ -1,20 +1,21 @@
 import Tips from "@/components/Tips";
 import { tips } from "@/consts";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { navigate } from "expo-router/build/global-state/routing";
 import { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 
 
 
 export default function Fasting() {
-  const [plan, setPlan] = useState("Nenhum plano selecionado");
+  const [plan, setPlan] = useState("Flexível");
   const [isStarted, setIsStarted] = useState(false);
+  const router = useRouter();
 
 
   const onPressPlan = () => {
-  navigate("/plans");
+  router.push("/plans");
 }
 
 
