@@ -1,12 +1,27 @@
 import { Stack } from "expo-router";
 
 
-export function ScreenLayout() {
+export default function ScreensLayout() {
   return (
     <Stack
-      screenOptions={{ headerShown: true, headerStyle: { backgroundColor: "#F0F8FF" }, headerTitleAlign: 'center', headerShadowVisible: false }}
+      screenOptions={{
+        headerStyle: { backgroundColor: "#F0F8FF" },
+        headerTitleAlign: 'center',
+        headerShadowVisible: false,
+      }}
     >
-      <Stack.Screen name="info" options={{ title: "Informações", headerTitleStyle: { fontWeight: "bold", color: "black", fontSize: 24 } }} />
+      <Stack.Screen name="info"
+      options={{
+          headerTitle: "Informações",
+          headerTitleStyle: { color: "black", fontSize: 24 },
+        }}
+      />
+      <Stack.Screen name="plans"
+      options={{
+          headerTitle: "Planos de Jejum",
+          headerTitleStyle: { color: "black", fontSize: 24 },
+        }}
+      />
     </Stack>
   )
 }

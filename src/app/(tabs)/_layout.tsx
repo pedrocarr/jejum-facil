@@ -1,6 +1,20 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Tabs } from "expo-router";
+import { navigate } from "expo-router/build/global-state/routing";
+import { TouchableOpacity } from "react-native";
+
+const onPressInfo = () => {
+  navigate("/info");
+}
+
+const showInfo = () => {
+  return (
+    <TouchableOpacity onPress={onPressInfo} className="mr-4">
+      <MaterialCommunityIcons name="information-outline" color="#c0c0c0" size={40} />
+    </TouchableOpacity>
+  );
+}
 
 export default function TabsLayout() {
   return (
@@ -14,7 +28,7 @@ export default function TabsLayout() {
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
-          alignContent: 'center'
+          shadowRadius: 0,
         },
         tabBarActiveTintColor: "#6200ee",
         tabBarInactiveTintColor: "#666666",
@@ -24,8 +38,9 @@ export default function TabsLayout() {
         name="fasting"
         options={{
           title: "Jejum",
-          headerTitle: "JEJUM FÁCIL",
+          headerTitle: "MEU JEJUM",
           headerTitleStyle: { fontWeight: "bold", color: "black", fontSize: 24 },
+          headerRight: () => showInfo(),
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home-outline" color={color} size={size} />
           ),
@@ -35,6 +50,7 @@ export default function TabsLayout() {
         name="journal"
         options={{
           title: "Diário",
+          headerTitleStyle: { fontSize: 24 },
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="book-edit" color={color} size={size} />
           ),
@@ -44,6 +60,7 @@ export default function TabsLayout() {
         name="dashboard"
         options={{
           title: "Painel",
+          headerTitleStyle: { fontSize: 24 },
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="google-analytics" color={color} size={size} />
           ),

@@ -2,34 +2,67 @@ import Tips from "@/components/Tips";
 import { tips } from "@/consts";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { navigate } from "expo-router/build/global-state/routing";
+import { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 
 
-const onPressInfo = () => {
-  navigate("/info");
-}
+
 
 export default function Fasting() {
+  const [plan, setPlan] = useState("Nenhum plano selecionado");
+  const [isStarted, setIsStarted] = useState(false);
+
+
+  const onPressPlan = () => {
+  navigate("/plans");
+}
+
+
+const onPressStart = () => {
+  setIsStarted(!isStarted);
+}
+
+const onPressEnd = () => {
+  setIsStarted(!isStarted);
+}
+
+
   return (
     <ScrollView className="flex-1 bg-[#F0F8FF]">
-      <View className="mt-10 mb-4">
-        <Text className="text-3xl text-center font-bold">Olá!</Text>
-        <Text className="text-lg text-center m-2 p-2">
-          Vamos começar seu jejum de hoje 😀?
-        </Text>
-      </View>
-      <View className="items-center m-4">
-        <TouchableOpacity onPress={onPressInfo}>
-          <MaterialCommunityIcons name="information-outline" color="#c0c0c0" size={40} />
-        </TouchableOpacity>
-      </View>
-      <View className="items-center">
-        <TouchableOpacity onPress={() => console.log("I am pressed")}>
-          <View className="m-4 p-4 bg-[#6200ee] rounded-3xl items-center">
-            <Text className="text-white font-bold text-xl">Iniciar Jejum</Text>
+      {!isStarted && (
+        <>
+          <View className="mb-4">
+            <Text className="text-3xl text-center font-bold">Olá!</Text>
+            <Text className="text-xl text-center m-2 p-2">
+              Vamos começar seu jejum de hoje 😀?
+            </Text>
           </View>
-        </TouchableOpacity>
-      </View>
+          <View className="items-center mt-4 mb-4">
+            <TouchableOpacity onPress={onPressPlan} >
+              <View className="flex-row items-center gap-2 bg-blue-200 rounded-full p-2 px-4">
+                <Text className="text-xl">{plan}</Text>
+                <MaterialCommunityIcons name="circle-edit-outline" color="#000000" size={24} />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View className="items-center mt-10">
+            <TouchableOpacity onPress={onPressStart}>
+              <View className="m-4 p-4 bg-[#6200ee] rounded-full text-center">
+                <Text className="text-white font-bold text-xl">Iniciar Jejum</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
+      {isStarted && (
+        <View className="items-center mt-10">
+          <TouchableOpacity onPress={onPressEnd}>
+            <View className="m-4 p-4 bg-[#6200ee] rounded-full text-center">
+              <Text className="text-white font-bold text-xl">Jejum em andamento</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
       <View>
         <Text className="text-2xl text-center mb-2 mt-24 p-2">
           💡 Dicas
@@ -41,7 +74,12 @@ export default function Fasting() {
         </Text>
       </View>
       {tips.map((tip) => (
-        Tips({ title: tip.title, content: tip.content, emoji: tip.emoji, index: tip.index })
+        <Tips
+          key={tip.index}
+          title={tip.title as string}
+          content={tip.content as string}
+          emoji={tip.emoji as string}
+        />
       ))}
     </ScrollView>
   );

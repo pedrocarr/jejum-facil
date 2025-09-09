@@ -1,4 +1,4 @@
-export const tips = [
+export const tips: Array<Record<string, string | number >> = [
   {
     index: 0,
     title: "Mantenha-se hidratado",
