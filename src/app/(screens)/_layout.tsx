@@ -20,7 +20,7 @@ export default function ScreensLayout() {
       />
       <Stack.Screen name="plans"
       options={{
-          headerTitle: "",
+          headerTitle: "Planos de Jejum",
           headerTitleStyle: { color: "black", fontSize: 24 },
           animation: "slide_from_right",
         }}

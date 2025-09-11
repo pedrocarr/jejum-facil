@@ -1,4 +1,6 @@
-export const beginnerPlans = [
+export type FastingPlans = Array<Record<string, string>>
+
+export const beginnerPlans: FastingPlans = [
   {
     id: 'bg-1',
     title: "11:13",
@@ -31,7 +33,7 @@ export const beginnerPlans = [
   },
 ]
 
-export const intermediatePlans = [
+export const intermediatePlans: FastingPlans = [
   {
     id: 'intermediate-1',
     title: "16:8",
@@ -58,7 +60,7 @@ export const intermediatePlans = [
   },
 ]
 
-export const advancedPlans = [
+export const advancedPlans: FastingPlans = [
   {
     id: 'advanced-1',
     title: "20:4",
@@ -85,7 +87,7 @@ export const advancedPlans = [
   },
 ]
 
-export const pronlongedFastingPlans = [
+export const pronlongedFastingPlans: FastingPlans = [
   {
     id: 'prolonged-1',
     title: "24h",

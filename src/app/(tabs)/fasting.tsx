@@ -1,31 +1,90 @@
 import Tips from "@/components/Tips";
 import { tips } from "@/consts";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-
-
-
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRef } from "react";
 
 export default function Fasting() {
-  const [plan, setPlan] = useState("Flexível");
+  const [selectedPlan, setSelectedPlan] = useState({
+    id: "flexivel",
+    title: "Flexível",
+    fastingDescription: "Jejue o tempo que que quiser"
+  });
   const [isStarted, setIsStarted] = useState(false);
   const router = useRouter();
+  const params = useLocalSearchParams();
+  const [timer, setTimer] = useState("00:00:00");
+  console.log("🚀 ~ Fasting ~ timer:", timer)
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const secondsRef = useRef(0);
+
+  const handleTimerPress = () => {
+    if (selectedPlan.id === "flexivel") {
+      setIsStarted((prev) => {
+        const next = !prev;
+        if (next) {
+          secondsRef.current = 0;
+          timerRef.current = setInterval(() => {
+            secondsRef.current += 1;
+            const hours = Math.floor(secondsRef.current / 3600);
+            const minutes = Math.floor((secondsRef.current % 3600) / 60);
+            const seconds = secondsRef.current % 60;
+            setTimer(
+              `${hours.toString().padStart(2, '0')}:${minutes
+                .toString()
+                .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+            );
+          }, 1000);
+        } else {
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+        }
+        return next;
+      });
+    } else {
+      // Lógica para planos com tempo definido
+      console.log(`Iniciar/Parar timer para o plano ${selectedPlan.title}`);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
 
 
-  const onPressPlan = () => {
-  router.push("/plans");
-}
+  const onPressOpenPlans = () => {
+    router.push("/plans");
+  }
 
 
-const onPressStart = () => {
-  setIsStarted(!isStarted);
-}
+  // const onPressStartFasting = () => {
+  //   setIsStarted(!isStarted);
+  // }
 
-const onPressEnd = () => {
-  setIsStarted(!isStarted);
-}
+  const onPressEndFasting = () => {
+    setIsStarted(!isStarted);
+  }
+
+  useEffect(() => {
+    if (params.selectedPlan) {
+      try {
+        const planData = JSON.parse(params.selectedPlan as string);
+        setSelectedPlan(planData);
+        router.setParams({ selectedPlan: undefined });
+      } catch (error) {
+        console.error('Error parsing selected plan:', error);
+      }
+    }
+  }, [params.selectedPlan]);
 
 
   return (
@@ -35,20 +94,23 @@ const onPressEnd = () => {
           <View className="mb-4">
             <Text className="text-3xl text-center font-bold">Olá!</Text>
             <Text className="text-xl text-center m-2 p-2">
-              Vamos começar seu jejum de hoje 😀?
+              Pronto para começar seu jejum 😀?
             </Text>
           </View>
           <View className="items-center mt-4 mb-4">
-            <TouchableOpacity onPress={onPressPlan} >
+            <View>
+              <Text className="text-lg text-center mb-2">Plano Selecionado:</Text>
+            </View>
+            <TouchableOpacity onPress={onPressOpenPlans} >
               <View className="flex-row items-center gap-2 bg-blue-200 rounded-full p-2 px-4">
-                <Text className="text-xl">{plan}</Text>
+                <Text className="text-xl">{selectedPlan.title}</Text>
                 <MaterialCommunityIcons name="circle-edit-outline" color="#000000" size={24} />
               </View>
             </TouchableOpacity>
           </View>
-          <View className="items-center mt-10">
-            <TouchableOpacity onPress={onPressStart}>
-              <View className="m-4 p-4 bg-[#6200ee] rounded-full text-center">
+          <View className="mt-24 items-center">
+            <TouchableOpacity onPress={handleTimerPress}>
+              <View className="m-4 p-4 bg-[#663399] rounded-full">
                 <Text className="text-white font-bold text-xl">Iniciar Jejum</Text>
               </View>
             </TouchableOpacity>
@@ -57,14 +119,15 @@ const onPressEnd = () => {
       )}
       {isStarted && (
         <View className="items-center mt-10">
-          <TouchableOpacity onPress={onPressEnd}>
-            <View className="m-4 p-4 bg-[#6200ee] rounded-full text-center">
+          <TouchableOpacity onPress={onPressEndFasting}>
+            <Text className="text-black font-bold text-6xl">{timer}</Text>
+            <View className="m-4 p-4 bg-[#663399] rounded-full text-center">
               <Text className="text-white font-bold text-xl">Jejum em andamento</Text>
             </View>
           </TouchableOpacity>
         </View>
       )}
-      <View>
+      <View className="fixed">
         <Text className="text-2xl text-center mb-2 mt-24 p-2">
           💡 Dicas
         </Text>
