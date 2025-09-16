@@ -6,13 +6,9 @@ import { TouchableOpacity } from "react-native";
 
 const router = useRouter();
 
-const onPressInfo = () => {
-  router.push("/info");
-}
-
 const showInfo = () => {
   return (
-    <TouchableOpacity onPress={onPressInfo} className="mr-4">
+    <TouchableOpacity onPress={() => router.push("/info")} className="mr-4">
       <MaterialCommunityIcons name="information-outline" color="#c0c0c0" size={40} />
     </TouchableOpacity>
   );

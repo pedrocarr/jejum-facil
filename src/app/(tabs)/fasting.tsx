@@ -2,15 +2,11 @@ import Tips from "@/components/Tips";
 import { tips } from "@/consts";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Button } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { useRef } from "react";
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
-
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { useRouter, useLocalSearchParams, UnknownOutputParams } from "expo-router";
 
 
 export default function Fasting() {
-  const [isPlaying, setIsPlaying] = React.useState(true)
   const [selectedPlan, setSelectedPlan] = useState({
     id: "flexivel",
     title: "Flexível",
@@ -19,50 +15,9 @@ export default function Fasting() {
   const [isStarted, setIsStarted] = useState(false);
   const router = useRouter();
   const params = useLocalSearchParams();
-  const [timer, setTimer] = useState("00:00:00");
-
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const secondsRef = useRef(0);
-
-
-  const handleTimerPress = () => {
-    if (selectedPlan.id === "flexivel") {
-      setIsStarted((prev) => {
-        const next = !prev;
-        if (next) {
-          secondsRef.current = 0;
-          timerRef.current = setInterval(() => {
-            secondsRef.current += 1;
-            const hours = Math.floor(secondsRef.current / 3600);
-            const minutes = Math.floor((secondsRef.current % 3600) / 60);
-            const seconds = secondsRef.current % 60;
-            setTimer(
-              `${hours.toString().padStart(2, '0')}:${minutes
-                .toString()
-                .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-            );
-          }, 1000);
-        } else {
-          if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-          }
-        }
-        return next;
-      });
-    } else {
-      // Lógica para planos com tempo definido
-      console.log(`Iniciar/Parar timer para o plano ${selectedPlan.title}`);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, []);
+  const [flexibleTime, setFlexibleTime] = useState(null)
+  const [customTime, setCustomTime] = useState(null)
+  const [freePlanTime, setFreePlanTime] = useState(null)
 
 
   const onPressOpenPlans = () => {
@@ -84,6 +39,21 @@ export default function Fasting() {
       }
     }
   }, [params.selectedPlan]);
+
+
+  const handleStartFasting = () => {
+    if (selectedPlan.title === 'Flexível') {
+      // setFlexibleTime()
+    } else if (selectedPlan.title.includes(':')) {
+      const [fastingHours, feedingHours] = selectedPlan.title.split(':')
+      const fastingHoursSeconds = Number(fastingHours) * 3600
+      setCustomTime(fastingHoursSeconds)
+    } else {
+      const [fastingHours, _] = selectedPlan.title.split('h')
+      console.log("🚀 ~ handleStartFasting ~ _:", _)
+      console.log("🚀 ~ handleStartFasting ~ fastingHours:", fastingHours)
+    }
+  }
 
 
   return (
@@ -108,22 +78,7 @@ export default function Fasting() {
             </TouchableOpacity>
           </View>
           <View className="mt-24 items-center">
-            {/* <CountdownCircleTimer
-              isPlaying={isPlaying}
-              duration={1200}
-              colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-              colorsTime={[10, 6, 3, 0]}
-              onComplete={() => ({ shouldRepeat: true, delay: 2 })}
-              updateInterval={1}
-            >
-              {({ remainingTime, color }) => (
-                <Text style={{ color, fontSize: 40 }}>
-                  {remainingTime}
-                </Text>
-              )}
-            </CountdownCircleTimer>
-            <Button title="Toggle Playing" onPress={() => setIsPlaying(prev => !prev)} /> */}
-            <TouchableOpacity onPress={handleTimerPress}>
+            <TouchableOpacity onPress={handleStartFasting}>
               <View className="m-4 p-4 bg-[#663399] rounded-full">
                 <Text className="text-white font-bold text-xl">Iniciar Jejum</Text>
               </View>
@@ -131,7 +86,7 @@ export default function Fasting() {
           </View>
         </>
       )}
-      {isStarted && (
+      {isStarted && customTime !== null && (
         <View className="items-center mt-10">
           <TouchableOpacity onPress={onPressEndFasting}>
             <View className="m-4 p-4 bg-[#663399] rounded-full text-center">
