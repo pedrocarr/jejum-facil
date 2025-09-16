@@ -1,12 +1,16 @@
 import Tips from "@/components/Tips";
 import { tips } from "@/consts";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Button } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useRef } from "react";
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+
+
 
 export default function Fasting() {
+  const [isPlaying, setIsPlaying] = React.useState(true)
   const [selectedPlan, setSelectedPlan] = useState({
     id: "flexivel",
     title: "Flexível",
@@ -16,10 +20,10 @@ export default function Fasting() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const [timer, setTimer] = useState("00:00:00");
-  console.log("🚀 ~ Fasting ~ timer:", timer)
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const secondsRef = useRef(0);
+
 
   const handleTimerPress = () => {
     if (selectedPlan.id === "flexivel") {
@@ -65,11 +69,6 @@ export default function Fasting() {
     router.push("/plans");
   }
 
-
-  // const onPressStartFasting = () => {
-  //   setIsStarted(!isStarted);
-  // }
-
   const onPressEndFasting = () => {
     setIsStarted(!isStarted);
   }
@@ -109,6 +108,21 @@ export default function Fasting() {
             </TouchableOpacity>
           </View>
           <View className="mt-24 items-center">
+            {/* <CountdownCircleTimer
+              isPlaying={isPlaying}
+              duration={1200}
+              colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+              colorsTime={[10, 6, 3, 0]}
+              onComplete={() => ({ shouldRepeat: true, delay: 2 })}
+              updateInterval={1}
+            >
+              {({ remainingTime, color }) => (
+                <Text style={{ color, fontSize: 40 }}>
+                  {remainingTime}
+                </Text>
+              )}
+            </CountdownCircleTimer>
+            <Button title="Toggle Playing" onPress={() => setIsPlaying(prev => !prev)} /> */}
             <TouchableOpacity onPress={handleTimerPress}>
               <View className="m-4 p-4 bg-[#663399] rounded-full">
                 <Text className="text-white font-bold text-xl">Iniciar Jejum</Text>
@@ -120,7 +134,6 @@ export default function Fasting() {
       {isStarted && (
         <View className="items-center mt-10">
           <TouchableOpacity onPress={onPressEndFasting}>
-            <Text className="text-black font-bold text-6xl">{timer}</Text>
             <View className="m-4 p-4 bg-[#663399] rounded-full text-center">
               <Text className="text-white font-bold text-xl">Jejum em andamento</Text>
             </View>

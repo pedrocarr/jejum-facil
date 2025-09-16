@@ -18,6 +18,22 @@ const showInfo = () => {
   );
 }
 
+const showCalendar = () => {
+  return (
+    <TouchableOpacity onPress={() => router.push("/calendar")} className="mr-4">
+      <MaterialCommunityIcons name="calendar-month-outline" color="#c0c0c0" size={40} />
+    </TouchableOpacity>
+  );
+}
+
+const showSettings = () => {
+  return (
+    <TouchableOpacity onPress={() => router.push("/settings")} className="mr-4">
+      <MaterialCommunityIcons name="cog-outline" color="#c0c0c0" size={40} />
+    </TouchableOpacity>
+  );
+}
+
 export default function TabsLayout() {
   return (
     <Tabs
@@ -56,6 +72,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="book-edit" color={color} size={size} />
           ),
+          headerRight: () => showCalendar(),
         }}
       />
       <Tabs.Screen
@@ -66,6 +83,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="google-analytics" color={color} size={size} />
           ),
+          headerRight: () => showSettings(),
         }}
       />
     </Tabs>
