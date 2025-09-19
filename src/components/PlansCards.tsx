@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-
 type PlanosCardsProps = {
   id: string;
   title: string;
@@ -9,7 +8,6 @@ type PlanosCardsProps = {
   feedingDescription?: string;
   onPress?: () => void;
 };
-
 
 export default function PlansCards(props: PlanosCardsProps) {
   return (

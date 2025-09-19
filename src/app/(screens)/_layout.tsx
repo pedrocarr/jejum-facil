@@ -34,6 +34,12 @@ export default function ScreensLayout() {
           headerTitleStyle: { color: "black", fontSize: 24 },
         }}
       />
+      <Stack.Screen name="save-plan"
+      options={{
+          headerTitle: "Salvar jejum",
+          headerTitleStyle: { color: "black", fontSize: 24 },
+        }}
+      />
     </Stack>
   )
 }

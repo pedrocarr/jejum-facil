@@ -1,10 +1,11 @@
 import Tips from "@/components/Tips";
 import { tips } from "@/consts";
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity, Text } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import FastingPlanSelected from "@/components/FastingPlanSelected";
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import { Dialog, Portal, Button } from "react-native-paper";
 
 export default function Fasting() {
   const [selectedPlan, setSelectedPlan] = useState({
@@ -16,11 +17,12 @@ export default function Fasting() {
   const [fastingDuration, setFastingDuration] = useState(null);
   const [isFlexible, setIsFlexible] = useState(false);
   const [startTime, setStartTime] = useState(null);
+  const [dialogVisible, setDialogVisible] = useState(false);
 
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  const parsePlanDuration = (planTitle) => {
+  const parsePlanDuration = (planTitle: string) => {
     if (planTitle === 'Flexível') {
       return { isFlexible: true, duration: null };
     } else if (planTitle.includes(':')) {
@@ -60,7 +62,7 @@ export default function Fasting() {
 
     return (
       <View className="items-center p-8">
-        <Text className="text-5xl font-bold text-[#663399] mb-2">
+        <Text className="text-6xl font-bold text-[#663399] mb-2">
           {formatTime(elapsedTime)}
         </Text>
         <Text className="text-lg text-gray-600">Tempo de jejum</Text>
@@ -68,17 +70,15 @@ export default function Fasting() {
     );
   };
 
-  // Fixed duration timer component
   const FixedTimerComponent = () => (
     <CountdownCircleTimer
       isPlaying={isStarted}
-      duration={100}
+      duration={fastingDuration}
       colors={['#00C9FF', '#92FE9D', '#FCEE09', '#FF0099']}
       colorsTime={[fastingDuration * 0.6, fastingDuration * 0.4, fastingDuration * 0.2, 0]}
       strokeWidth={16}
       size={250}
       onComplete={() => {
-        // Handle completion - you might want to show a notification or alert
         console.log('Fasting completed!');
         return { shouldRepeat: false };
       }}
@@ -107,10 +107,7 @@ export default function Fasting() {
   };
 
   const onPressEndFasting = () => {
-    setIsStarted(false);
-    setFastingDuration(null);
-    setIsFlexible(false);
-    setStartTime(null);
+    setDialogVisible(true);
   };
 
   useEffect(() => {
@@ -140,59 +137,85 @@ export default function Fasting() {
     }
   };
 
+  const dismissEndFasting = () => {
+    setDialogVisible(false);
+  };
+
+  const confirmEndFasting = () => {
+    setDialogVisible(false);
+    setIsStarted(false);
+    setFastingDuration(null);
+    setIsFlexible(false);
+    setStartTime(null);
+    router.push("/save-plan")
+  };
+
   return (
-    <ScrollView className="flex-1 bg-[#F0F8FF]">
-      {!isStarted && (
-        <>
-          <View className="mb-4">
-            <Text className="text-3xl text-center font-bold">Olá!</Text>
-            <Text className="text-xl text-center m-2 p-2">
-              Pronto para começar seu jejum 😀?
-            </Text>
-          </View>
-          <FastingPlanSelected onPress={onPressOpenPlans} planTitle={selectedPlan.title} />
-          <View className="mt-24 items-center">
-            <TouchableOpacity onPress={handleStartFasting}>
-              <View className="m-4 p-4 bg-[#663399] rounded-full">
-                <Text className="text-white font-bold text-xl">Iniciar Jejum</Text>
+    <>
+      <ScrollView className="flex-1 bg-[#F0F8FF]">
+        {!isStarted && (
+          <>
+            <View className="mb-4">
+              <Text className="text-3xl text-center font-bold">Olá!</Text>
+              <Text className="text-xl text-center m-2 p-2">
+                Pronto para começar seu jejum 😀?
+              </Text>
+            </View>
+            <FastingPlanSelected onPress={onPressOpenPlans} planTitle={selectedPlan.title} />
+            <View className="mt-24 items-center">
+              <TouchableOpacity onPress={handleStartFasting}>
+                <View className="m-4 p-4 bg-[#663399] rounded-full">
+                  <Text className="text-white font-bold text-xl">Iniciar Jejum</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+        {isStarted && (
+          <View className="items-center mt-2">
+            <FastingPlanSelected onPress={onPressOpenPlans} planTitle={selectedPlan.title} />
+            {isFlexible ? <FlexibleTimerComponent /> : <FixedTimerComponent />}
+            <TouchableOpacity onPress={onPressEndFasting}>
+              <View className="m-4 p-4 bg-[#663399]  rounded-full">
+                <Text className="text-white font-bold text-xl">Parar jejum</Text>
               </View>
             </TouchableOpacity>
           </View>
-        </>
-      )}
-
-      {isStarted && (
-        <View className="items-center mt-2">
-          <FastingPlanSelected onPress={onPressOpenPlans} planTitle={selectedPlan.title} />
-
-          {isFlexible ? <FlexibleTimerComponent /> : <FixedTimerComponent />}
-
-          <TouchableOpacity onPress={onPressEndFasting}>
-            <View className="m-4 p-4 bg-[#663399]  rounded-full">
-              <Text className="text-white font-bold text-xl">Parar jejum</Text>
-            </View>
-          </TouchableOpacity>
+        )}
+        <View>
+          <Text className="text-2xl text-center mb-2 mt-24 p-2">
+            💡 Dicas
+          </Text>
         </View>
-      )}
-
-      <View>
-        <Text className="text-2xl text-center mb-2 mt-24 p-2">
-          💡 Dicas
-        </Text>
-      </View>
-      <View>
-        <Text className="text-lg text-center m-1 p-2">
-          Aqui vão algumas dicas para você começar seu jejum com o pé direito!
-        </Text>
-      </View>
-      {tips.map((tip) => (
-        <Tips
-          key={tip.id}
-          title={tip.title}
-          content={tip.content}
-          emoji={tip.emoji}
-        />
-      ))}
-    </ScrollView>
+        <View>
+          <Text className="text-lg text-center m-1 p-2">
+            Aqui vão algumas dicas para você começar seu jejum com o pé direito!
+          </Text>
+        </View>
+        {tips.map((tip) => (
+          <Tips
+            key={tip.id}
+            title={tip.title}
+            content={tip.content}
+            emoji={tip.emoji}
+          />
+        ))}
+      </ScrollView>
+      <Portal>
+        <Dialog visible={dialogVisible} onDismiss={dismissEndFasting}>
+          <Dialog.Content>
+            <Text className="text-xl">
+              Tem certeza que deseja terminar o jejum atual?
+            </Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={dismissEndFasting}>Não</Button>
+            <Button style={{width: 80}} onPress={confirmEndFasting} mode="contained">
+              Sim
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </>
   );
 }
