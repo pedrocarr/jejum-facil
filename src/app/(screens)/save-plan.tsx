@@ -1,10 +1,7 @@
-import React from 'react'
-import { Text } from 'react-native'
+import { Text } from "react-native"
 
-const savePlan = () => {
+export default function SavePlan () {
   return (
-    <Text>save-plan</Text>
+    <Text></Text>
   )
 }
-
-export default savePlan

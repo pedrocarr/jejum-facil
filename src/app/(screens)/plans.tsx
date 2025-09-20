@@ -1,8 +1,8 @@
 import PlansCards from "@/components/PlansCards";
 import { advancedPlans, beginnerPlans, intermediatePlans, pronlongedFastingPlans } from "@/consts";
 import { useState } from "react";
-import { ScrollView, View, SafeAreaView } from "react-native";
-import { SegmentedButtons, Dialog, Portal, Button, Text } from "react-native-paper";
+import { ScrollView, View, SafeAreaView, Text } from "react-native";
+import { SegmentedButtons, Dialog, Portal, Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 
 
@@ -64,7 +64,7 @@ export default function Plans() {
         </SafeAreaView>
         {segmentendButtonsvalue === 'planos' && (
           <View className="p-2">
-            <Text className="text-lg mb-4 ml-2">Flexível</Text>
+            <Text className="text-lg mb-4 ml-2 font-bold">Flexível</Text>
             <View className="mb-4">
               <PlansCards
                 id="flexivel"
@@ -77,7 +77,7 @@ export default function Plans() {
                 })}
               />
             </View>
-            <Text className="text-lg mb-4 ml-2">Planos para iniciantes</Text>
+            <Text className="text-lg mb-4 ml-2 font-bold">Planos para iniciantes</Text>
             <View className="flex flex-row flex-wrap justify-between">
               {beginnerPlans.map((plan) => (
                 <View key={plan.id} className="w-[50%] mb-4">
@@ -91,7 +91,7 @@ export default function Plans() {
                 </View>
               ))}
             </View>
-            <Text className="text-lg mb-4 ml-2">Planos intermediários</Text>
+            <Text className="text-lg mb-4 ml-2 font-bold">Planos intermediários</Text>
             <View className="flex flex-row flex-wrap justify-between">
               {intermediatePlans.map((plan) => (
                 <View key={plan.id} className="w-[50%] mb-4">
@@ -105,7 +105,7 @@ export default function Plans() {
                 </View>
               ))}
             </View>
-            <Text className="text-lg mb-4 ml-2">Planos avançados</Text>
+            <Text className="text-lg mb-4 ml-2 font-bold">Planos avançados</Text>
             <View className="flex flex-row flex-wrap justify-between">
               {advancedPlans.map((plan) => (
                 <View key={plan.id} className="w-[50%] mb-4">
@@ -119,7 +119,7 @@ export default function Plans() {
                 </View>
               ))}
             </View>
-            <Text className="text-lg mb-4 ml-2">Jejum pronlogado</Text>
+            <Text className="text-lg mb-4 ml-2 font-bold">Jejum pronlogado</Text>
             <View className="flex flex-row flex-wrap justify-between">
               {pronlongedFastingPlans.map((plan) => (
                 <View key={plan.id} className="w-[50%] mb-4">
@@ -139,16 +139,16 @@ export default function Plans() {
         <Dialog visible={dialogVisible} onDismiss={cancelPlanSelection}>
           <Dialog.Title>Confirmar Seleção de Plano</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">
-              Tem certeza de que deseja selecionar o plano "<Text style={{ fontWeight: "bold"}}>{pendingPlan?.title}</Text>"?
+            <Text className="text-lg">
+              Tem certeza de que deseja selecionar o plano "<Text className="font-bold">{pendingPlan?.title}</Text>"?
             </Text>
             {pendingPlan?.fastingDescription && (
-              <Text variant="bodyMedium" style={{ marginTop: 8 }}>
+              <Text className="text-lg mt-2">
                 {pendingPlan.fastingDescription}
               </Text>
             )}
             {pendingPlan?.feedingDescription && (
-              <Text variant="bodyMedium" style={{ marginTop: 4 }}>
+              <Text className="text-lg mt-2">
                 {pendingPlan.feedingDescription}
               </Text>
             )}
