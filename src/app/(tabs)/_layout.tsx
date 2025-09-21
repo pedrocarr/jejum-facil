@@ -85,6 +85,17 @@ export default function TabsLayout() {
             headerRight: () => showSettings(),
           }}
         />
+        <Tabs.Screen
+          name="support"
+          options={{
+            title: "Suporte",
+            headerTitle: "Suporte",
+            headerTitleStyle: { fontWeight: "bold", color: "black", fontSize: 24 },
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="cellphone-information" color={color} size={size} />
+            ),
+          }}
+        />
       </Tabs>
     </GestureHandlerRootView>
   );

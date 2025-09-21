@@ -1,10 +1,31 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { View, Text } from "react-native";
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 
 interface CalendarBottomSheetModalProps { }
+
+LocaleConfig.locales['br'] = {
+  monthNames: [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro'
+  ],
+  monthNamesShort: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  dayNames: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+  dayNamesShort: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+  today: "Hoje"
+};
+
+LocaleConfig.defaultLocale = 'br';
 
 const CalendarBottomSheetModal = forwardRef<BottomSheet, CalendarBottomSheetModalProps>((props, ref) => {
   const snapPoints = useMemo(() => ['25%', '50%'], []);
@@ -26,7 +47,6 @@ const CalendarBottomSheetModal = forwardRef<BottomSheet, CalendarBottomSheetModa
       <BottomSheetView className="flex-1 p-4">
         <Calendar
           className="height-[350px]"
-          initialDate="2025-09-01"
           onDayPress={day => {
             console.log('selected day', day);
           }}
