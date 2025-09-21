@@ -1,8 +1,8 @@
 import React, { useRef, useCallback } from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import BottomSheet from '@gorhom/bottom-sheet';
 import CalendarBottomSheetModal from "@/components/CalendarBottomSheetModal";
-import { ScrollView } from "react-native-gesture-handler";
+
 
 export default function Journal() {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -11,9 +11,7 @@ export default function Journal() {
     bottomSheetRef.current?.expand();
   }, []);
 
-  // This function will be called from the header button
   React.useEffect(() => {
-    // Expose the openBottomSheet function globally so the header button can access it
     (global as any).openCalendarBottomSheet = openBottomSheet;
 
     return () => {
