@@ -1,4 +1,3 @@
-import Tips from "@/components/Tips";
 import { tips } from "@/consts";
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, TouchableOpacity, Text } from "react-native";
@@ -6,6 +5,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import FastingPlanSelected from "@/components/FastingPlanSelected";
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import { Dialog, Portal, Button } from "react-native-paper";
+import TipsCard from "@/components/TipsCard";
 
 export default function Fasting() {
   const [selectedPlan, setSelectedPlan] = useState({
@@ -193,7 +193,7 @@ export default function Fasting() {
           </Text>
         </View>
         {tips.map((tip) => (
-          <Tips
+          <TipsCard
             key={tip.id}
             title={tip.title}
             content={tip.content}

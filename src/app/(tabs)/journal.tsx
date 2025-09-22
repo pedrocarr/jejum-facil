@@ -1,9 +1,9 @@
 import React, { useRef, useCallback } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, ScrollView, View } from "react-native";
 import BottomSheet from '@gorhom/bottom-sheet';
 import CalendarBottomSheetModal from "@/components/CalendarBottomSheetModal";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import NotesComponent from "@/components/NotesComponent";
+import NotesCard from "@/components/NotesCard";
+import WeightCard from "@/components/WeightCard";
 
 
 export default function Journal() {
@@ -22,9 +22,15 @@ export default function Journal() {
   }, [openBottomSheet]);
 
   return (
-    <View className="flex-1 bg-[#F0F8FF]">
-      <NotesComponent onPress={() => {}} />
+    <ScrollView className="flex-1 bg-[#F0F8FF] gap-2"
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
+      <View>
+        <Text className="">Hello</Text>
+      </View>
+      <NotesCard />
+      <WeightCard />
       <CalendarBottomSheetModal ref={bottomSheetRef} />
-    </View>
+    </ScrollView>
   );
 }

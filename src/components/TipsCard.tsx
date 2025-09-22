@@ -7,7 +7,7 @@ type TipsProps = {
   emoji?: string;
 };
 
-export default function Tips(props: TipsProps) {
+export default function TipsCard(props: TipsProps) {
   return (
     <View className="bg-white m-2 p-4 rounded-lg shadow-md">
       <Text className="text-lg font-bold mb-2">
