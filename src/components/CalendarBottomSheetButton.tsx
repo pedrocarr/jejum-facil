@@ -6,7 +6,7 @@ interface CalendarBottomSheetProps {
   onPress: () => void;
 }
 
-export default function CalendarBottomSheet({ onPress }: CalendarBottomSheetProps) {
+export default function CalendarBottomSheetButton({ onPress }: CalendarBottomSheetProps) {
   return (
     <TouchableOpacity
       onPress={onPress}

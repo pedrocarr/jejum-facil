@@ -22,12 +22,6 @@ export default function ScreensLayout() {
           headerTitleStyle: { color: "black", fontSize: 24 },
         }}
       />
-      <Stack.Screen name="calendar"
-      options={{
-          headerTitle: "",
-          headerTitleStyle: { color: "black", fontSize: 24 },
-        }}
-      />
       <Stack.Screen name="settings"
       options={{
           headerTitle: "Configurações",

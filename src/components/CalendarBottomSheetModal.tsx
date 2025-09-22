@@ -37,7 +37,7 @@ const CalendarBottomSheetModal = forwardRef<BottomSheet, CalendarBottomSheetModa
   return (
     <BottomSheet
       ref={ref}
-      index={-1} // Start closed
+      index={-1}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       enablePanDownToClose={true}

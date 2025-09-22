@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import BottomSheet from '@gorhom/bottom-sheet';
 import CalendarBottomSheetModal from "@/components/CalendarBottomSheetModal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import NotesComponent from "@/components/NotesComponent";
 
 
 export default function Journal() {
@@ -22,14 +23,7 @@ export default function Journal() {
 
   return (
     <View className="flex-1 bg-[#F0F8FF]">
-      <View className="bg-white m-2 p-4 rounded-lg shadow-md">
-        <View className="justify-between">
-          <Text className="text-xl font-bold"><MaterialCommunityIcons name="note" color="#c0c0c0" size={20} /> Notas</Text>
-          <TouchableOpacity>
-            <MaterialCommunityIcons name="plus-circle" color="#c0c0c0" size={20}  ></MaterialCommunityIcons>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <NotesComponent onPress={() => {}} />
       <CalendarBottomSheetModal ref={bottomSheetRef} />
     </View>
   );

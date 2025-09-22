@@ -1,4 +1,4 @@
-import CalendarBottomSheet from "@/components/CalendarBottomSheet";
+import CalendarBottomSheetButton from "@/components/CalendarBottomSheetButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Tabs } from "expo-router";
@@ -64,7 +64,7 @@ export default function TabsLayout() {
               <MaterialCommunityIcons name="book-edit" color={color} size={size} />
             ),
             headerRight: () => (
-              <CalendarBottomSheet
+              <CalendarBottomSheetButton
                 onPress={() => {
                   if ((global as any).openCalendarBottomSheet) {
                     (global as any).openCalendarBottomSheet();
@@ -90,7 +90,7 @@ export default function TabsLayout() {
           options={{
             title: "Suporte",
             headerTitle: "Suporte",
-            headerTitleStyle: { fontWeight: "bold", color: "black", fontSize: 24 },
+            headerTitleStyle: { fontSize: 24 },
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="cellphone-information" color={color} size={size} />
             ),
