@@ -1,11 +1,16 @@
 import { tips } from "@/consts";
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, TouchableOpacity, Text } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import FastingPlanSelected from "@/components/FastingPlanSelected";
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
-import { Dialog, Portal, Button } from "react-native-paper";
+import EnhancedCountdownTimer from "@/components/EnhancedCountdownTimer";
+import FlexibleTimer from "@/components/FlexibleTimer";
+import TimerControls from "@/components/TimerControls";
 import TipsCard from "@/components/TipsCard";
+import { Dialog, Portal, Button } from "react-native-paper";
+import { useFastingTimer } from "@/hooks/useFastingTimer";
+import { FastingSession } from "@/types/fasting";
+import { formatDuration } from "@/utils/fasting";
 
 export default function Fasting() {
   const [selectedPlan, setSelectedPlan] = useState({
@@ -13,94 +18,46 @@ export default function Fasting() {
     title: "Flexível",
     fastingDescription: "Jejue o tempo que que quiser"
   });
-  const [isStarted, setIsStarted] = useState(false);
-  const [fastingDuration, setFastingDuration] = useState(null);
-  const [isFlexible, setIsFlexible] = useState(false);
-  const [startTime, setStartTime] = useState(null);
   const [dialogVisible, setDialogVisible] = useState(false);
 
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  const parsePlanDuration = (planTitle: string) => {
-    if (planTitle === 'Flexível') {
-      return { isFlexible: true, duration: null };
-    } else if (planTitle.includes(':')) {
-      const [fastingHours] = planTitle.split(':');
-      return { isFlexible: false, duration: Number(fastingHours) * 3600 };
-    } else if (planTitle.includes('h')) {
-      const [fastingHours] = planTitle.split('h');
-      return { isFlexible: false, duration: Number(fastingHours) * 3600 };
-    } else {
-      const hours = parseInt(planTitle);
-      if (!isNaN(hours)) {
-        return { isFlexible: false, duration: hours * 3600 };
+  const {
+    timerState,
+    currentSession,
+    isRestored,
+    startTimer,
+    stopTimer,
+    pauseTimer,
+    resumeTimer,
+  } = useFastingTimer({
+    planId: selectedPlan.id,
+    planTitle: selectedPlan.title,
+    onComplete: handleSessionComplete,
+    onMilestone: handleMilestone,
+  });
+
+  function handleSessionComplete(session: FastingSession) {
+    // For now, just navigate to save screen
+    // In Phase 3, we'll implement proper persistence
+    router.push({
+      pathname: "/save-plan",
+      params: {
+        sessionData: JSON.stringify(session)
       }
-    }
-    return { isFlexible: true, duration: null };
-  };
+    });
+  }
 
-  const FlexibleTimerComponent = () => {
-    const [elapsedTime, setElapsedTime] = useState(0);
+  function handleMilestone(milestone: number, duration: number) {
+    // Show milestone celebration
+    const message = timerState.isFlexible
+      ? `🎉 ${formatDuration(duration)} de jejum!`
+      : `🎯 ${Math.round(milestone * 100)}% concluído!`;
 
-    useEffect(() => {
-      if (!startTime) return;
-
-      const interval = setInterval(() => {
-        setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }, [startTime]);
-
-    const formatTime = (seconds) => {
-      const hours = Math.floor(seconds / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      const secs = seconds % 60;
-      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    };
-
-    return (
-      <View className="items-center p-8">
-        <Text className="text-6xl font-bold text-[#663399] mb-2">
-          {formatTime(elapsedTime)}
-        </Text>
-        <Text className="text-lg text-gray-600">Tempo de jejum</Text>
-      </View>
-    );
-  };
-
-  const FixedTimerComponent = () => (
-    <CountdownCircleTimer
-      isPlaying={isStarted}
-      duration={fastingDuration}
-      colors={['#00C9FF', '#92FE9D', '#FCEE09', '#FF0099']}
-      colorsTime={[fastingDuration * 0.6, fastingDuration * 0.4, fastingDuration * 0.2, 0]}
-      strokeWidth={16}
-      size={250}
-      onComplete={() => {
-        console.log('Fasting completed!');
-        return { shouldRepeat: false };
-      }}
-    >
-      {({ remainingTime }) => {
-        const hours = Math.floor(remainingTime / 3600);
-        const minutes = Math.floor((remainingTime % 3600) / 60);
-        const seconds = remainingTime % 60;
-
-        return (
-          <View className="items-center">
-            <Text className="text-4xl font-bold text-[#663399]">
-              {String(hours).padStart(2, '0')}:
-              {String(minutes).padStart(2, '0')}:
-              {String(seconds).padStart(2, '0')}
-            </Text>
-            <Text className="text-sm text-gray-600">restante</Text>
-          </View>
-        );
-      }}
-    </CountdownCircleTimer>
-  );
+    // Could implement toast or notification here
+    console.log('Milestone reached:', message);
+  }
 
   const onPressOpenPlans = () => {
     router.push("/plans");
@@ -108,6 +65,20 @@ export default function Fasting() {
 
   const onPressEndFasting = () => {
     setDialogVisible(true);
+  };
+
+  const dismissEndFasting = () => {
+    setDialogVisible(false);
+  };
+
+  const confirmEndFasting = async () => {
+    setDialogVisible(false);
+    try {
+      await stopTimer();
+    } catch (error) {
+      console.error('Error stopping timer:', error);
+      Alert.alert('Erro', 'Erro ao parar o jejum');
+    }
   };
 
   useEffect(() => {
@@ -118,42 +89,41 @@ export default function Fasting() {
         router.setParams({ selectedPlan: undefined });
       } catch (error) {
         console.error('Error parsing selected plan:', error);
+        Alert.alert('Erro', 'Erro ao carregar plano selecionado');
       }
     }
-  }, [params.selectedPlan]);
+  }, [params.selectedPlan, router]);
 
-  const handleStartFasting = () => {
-    const { isFlexible: planIsFlexible, duration } = parsePlanDuration(selectedPlan.title);
-
-    setIsStarted(true);
-    setIsFlexible(planIsFlexible);
-
-    if (planIsFlexible) {
-      setStartTime(Date.now());
-      setFastingDuration(null);
-    } else {
-      setFastingDuration(duration);
-      setStartTime(null);
+  const renderTimer = () => {
+    if (timerState.isFlexible && timerState.startTime) {
+      return (
+        <FlexibleTimer
+          startTime={timerState.startTime}
+          onMilestone={handleMilestone}
+          showMilestones={true}
+        />
+      );
     }
-  };
 
-  const dismissEndFasting = () => {
-    setDialogVisible(false);
-  };
+    if (timerState.duration) {
+      return (
+        <EnhancedCountdownTimer
+          duration={timerState.duration}
+          isPlaying={timerState.isStarted && !timerState.isPaused}
+          onComplete={() => currentSession && handleSessionComplete(currentSession)}
+          onMilestone={handleMilestone}
+          showMilestones={true}
+        />
+      );
+    }
 
-  const confirmEndFasting = () => {
-    setDialogVisible(false);
-    setIsStarted(false);
-    setFastingDuration(null);
-    setIsFlexible(false);
-    setStartTime(null);
-    router.push("/save-plan")
+    return null;
   };
 
   return (
     <>
       <ScrollView className="flex-1 bg-[#F0F8FF]">
-        {!isStarted && (
+        {!timerState.isStarted && (
           <>
             <View className="mb-4">
               <Text className="text-3xl text-center font-bold">Olá!</Text>
@@ -161,56 +131,84 @@ export default function Fasting() {
                 Pronto para começar seu jejum 😀?
               </Text>
             </View>
-            <FastingPlanSelected onPress={onPressOpenPlans} planTitle={selectedPlan.title} />
-            <View className="mt-24 items-center">
-              <TouchableOpacity onPress={handleStartFasting}>
-                <View className="m-4 p-4 bg-[#663399] rounded-full">
-                  <Text className="text-white font-bold text-xl">Iniciar Jejum</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <FastingPlanSelected
+              onPress={onPressOpenPlans}
+              planTitle={selectedPlan.title}
+            />
           </>
         )}
-        {isStarted && (
+
+        {timerState.isStarted && (
           <View className="items-center mt-2">
-            <FastingPlanSelected onPress={onPressOpenPlans} planTitle={selectedPlan.title} />
-            {isFlexible ? <FlexibleTimerComponent /> : <FixedTimerComponent />}
-            <TouchableOpacity onPress={onPressEndFasting}>
-              <View className="m-4 p-4 bg-[#663399]  rounded-full">
-                <Text className="text-white font-bold text-xl">Parar jejum</Text>
-              </View>
-            </TouchableOpacity>
+            <FastingPlanSelected
+              onPress={onPressOpenPlans}
+              planTitle={selectedPlan.title}
+            />
+            {renderTimer()}
           </View>
         )}
-        <View>
-          <Text className="text-2xl text-center mb-2 mt-24 p-2">
+
+        <View className="items-center">
+          <TimerControls
+            isStarted={timerState.isStarted}
+            isPaused={timerState.isPaused}
+            onStart={async () => {
+              try {
+                await startTimer();
+              } catch (error) {
+                console.error('Error starting timer:', error);
+                Alert.alert('Erro', 'Erro ao iniciar o jejum');
+              }
+            }}
+            onStop={onPressEndFasting}
+            onPause={pauseTimer}
+            onResume={resumeTimer}
+            showPauseResume={!timerState.isFlexible}
+            startLabel="Iniciar Jejum"
+            stopLabel="Parar jejum"
+            pauseLabel="Pausar"
+            resumeLabel="Continuar"
+            disabled={!isRestored}
+          />
+        </View>
+
+        <View className="mt-8">
+          <Text className="text-2xl text-center mb-2 mt-12 p-2">
             💡 Dicas
           </Text>
-        </View>
-        <View>
           <Text className="text-lg text-center m-1 p-2">
             Aqui vão algumas dicas para você começar seu jejum com o pé direito!
           </Text>
+          {tips.map((tip) => (
+            <TipsCard
+              key={tip.id}
+              title={tip.title}
+              content={tip.content}
+              emoji={tip.emoji}
+            />
+          ))}
         </View>
-        {tips.map((tip) => (
-          <TipsCard
-            key={tip.id}
-            title={tip.title}
-            content={tip.content}
-            emoji={tip.emoji}
-          />
-        ))}
       </ScrollView>
+
       <Portal>
         <Dialog visible={dialogVisible} onDismiss={dismissEndFasting}>
           <Dialog.Content>
             <Text className="text-xl">
               Tem certeza que deseja terminar o jejum atual?
             </Text>
+            {currentSession && (
+              <Text className="text-base text-gray-600 mt-2">
+                Duração atual: {formatDuration(timerState.elapsedTime)}
+              </Text>
+            )}
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={dismissEndFasting}>Não</Button>
-            <Button style={{width: 80}} onPress={confirmEndFasting} mode="contained">
+            <Button
+              style={{ width: 80 }}
+              onPress={confirmEndFasting}
+              mode="contained"
+            >
               Sim
             </Button>
           </Dialog.Actions>
