@@ -117,7 +117,7 @@ const NotesCard = () => {
       <View className="bg-white m-4 p-4 rounded-lg shadow-md">
         <View className="flex-row justify-between items-center">
           <Text className="text-xl font-bold">
-            <MaterialCommunityIcons name="note" color="#c0c0c0" size={20} /> Notas
+            <MaterialCommunityIcons name="note" color="yellow" size={20} /> Notas
           </Text>
           <TouchableOpacity onPress={openNewNoteDialog}>
             <MaterialCommunityIcons name="plus-circle" color="#c0c0c0" size={30} />
@@ -128,7 +128,7 @@ const NotesCard = () => {
           <View className="items-center m-4">
             <View className="bg-slate-100 p-4 m-2 w-[50%] rounded-lg shadow-md items-center">
               <TouchableOpacity onPress={openNewNoteDialog}>
-                <MaterialCommunityIcons name="note" color="#c0c0c0" size={30} />
+                <MaterialCommunityIcons name="note" color="yellow" size={30} />
               </TouchableOpacity>
               <Text className='mt-2'>Adicionar Notas</Text>
             </View>
@@ -139,6 +139,7 @@ const NotesCard = () => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderNote}
             contentContainerStyle={{ marginTop: 16 }}
+            scrollEnabled={false}
           />
         )}
       </View>
@@ -188,7 +189,7 @@ const NotesCard = () => {
 
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
-        mode="datetime"
+        mode="time"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
         locale="pt_BR"
