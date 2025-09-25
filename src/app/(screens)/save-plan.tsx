@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert } from 'react-native';
+import { View, ScrollView, Alert, Text, StyleSheet } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { Text, Button, Card, Divider } from 'react-native-paper';
+import { Button, Card, TextInput } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FastingSession } from '@/types/fasting';
 import { formatTime, formatDuration, getSessionProgress } from '@/utils/fasting';
@@ -119,7 +119,11 @@ export default function SavePlan() {
   });
 
   return (
-    <ScrollView className="flex-1 bg-[#F0F8FF]">
+    <ScrollView
+      className="flex-1 bg-[#F0F8FF]"
+      contentContainerStyle={{ paddingBottom: 40 }}
+      showsVerticalScrollIndicator={false}
+    >
       <View className="p-4">
         {/* Header */}
         <View className="items-center mb-6">
@@ -218,11 +222,11 @@ export default function SavePlan() {
             </Text>
 
             {/* Simple text display for now - could be enhanced with TextInput */}
-            <View className="border border-gray-300 rounded-lg p-3 min-h-[80px] bg-white">
+            <TextInput className="border border-gray-300 rounded-lg p-3 min-h-[80px] bg-white">
               <Text className="text-base text-gray-700">
                 {notes || 'Nenhuma nota adicionada...'}
               </Text>
-            </View>
+            </TextInput>
           </Card.Content>
         </Card>
 
@@ -233,7 +237,7 @@ export default function SavePlan() {
             onPress={handleSave}
             loading={saving}
             disabled={saving}
-            className="py-1"
+            style={styles.actionButtons}
           >
             {saving ? 'Salvando...' : 'Salvar Sessão'}
           </Button>
@@ -242,7 +246,7 @@ export default function SavePlan() {
             mode="outlined"
             onPress={handleDiscard}
             disabled={saving}
-            className="py-1"
+            style={styles.actionButtons}
           >
             Descartar
           </Button>
@@ -251,7 +255,7 @@ export default function SavePlan() {
             mode="text"
             onPress={() => router.push('/(tabs)/dashboard')}
             disabled={saving}
-            className="py-1"
+            style={styles.actionButtons}
           >
             Ver Estatísticas
           </Button>
@@ -260,3 +264,10 @@ export default function SavePlan() {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  actionButtons: {
+    margin: 2,
+    paddingHorizontal: 8
+  },
+});

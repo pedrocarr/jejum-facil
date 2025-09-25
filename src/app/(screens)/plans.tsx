@@ -38,7 +38,11 @@ export default function Plans() {
 
   return (
     <>
-      <ScrollView className="flex-1 bg-[#F0F8FF] mb-8">
+      <ScrollView
+        className="flex-1 bg-[#F0F8FF]"
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      >
         <SafeAreaView className="flex-1 p-4 items-center">
           <SegmentedButtons
             value={segmentendButtonsvalue}

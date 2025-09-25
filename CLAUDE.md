@@ -14,6 +14,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Run on web**: `npm run web`
 - **Deploy**: `npm run deploy` (exports web build and deploys with EAS)
 
+### Testing & Quality
+- No test framework is currently configured
+- No linting or type checking scripts are available in package.json
+- TypeScript type checking can be run with `npx tsc --noEmit` if needed
+
 ## Architecture
 
 ### Tech Stack
@@ -69,9 +74,10 @@ src/
 - Separate timer components for flexible vs fixed duration fasting
 
 #### Data Management
-- Static fasting plans in `consts/plans.ts` with typed exports
+- Static fasting plans in `consts/plans.ts` with typed exports (beginnerPlans, intermediatePlans, advancedPlans, pronlongedFastingPlans)
 - Portuguese localization for dates and UI text
-- In-memory state for notes and fasting sessions (no persistence layer currently)
+- AsyncStorage available (@react-native-async-storage/async-storage) but not yet fully implemented
+- In-memory state for notes and fasting sessions (persistence layer in development)
 
 ## Key Features
 
@@ -84,7 +90,22 @@ src/
 ## Development Notes
 
 - TypeScript with strict typing for fasting plans and components
-- NativeWind configured with Metro bundler integration
+- NativeWind configured with Metro bundler integration (`./src/global.css`)
 - Uses React 19 and React Native 0.79.5
 - Babel configured for NativeWind JSX transforms and Reanimated
 - All components follow Portuguese naming and UI text
+- Path aliases configured: `@/*` maps to `./src/*`
+
+## Configuration Details
+
+### Key Configuration Files
+- **Metro**: NativeWind integration with `./src/global.css` input
+- **Babel**: JSX import source set to "nativewind", includes Reanimated plugin
+- **Tailwind**: Standard preset with content scanning `./src/**/*.{js,jsx,ts,tsx}`
+- **TypeScript**: Expo base config with path aliases for `@/*` → `./src/*`
+
+### Important Dependencies
+- `@react-native-async-storage/async-storage`: Available for persistence
+- `react-native-modal-datetime-picker`: Date/time selection
+- `@gorhom/bottom-sheet`: Bottom sheet navigation pattern
+- `react-native-calendars`: Calendar with Portuguese locale support

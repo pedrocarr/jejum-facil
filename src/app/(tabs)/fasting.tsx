@@ -1,6 +1,6 @@
 import { tips } from "@/consts";
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView, Alert, Text } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import FastingPlanSelected from "@/components/FastingPlanSelected";
 import EnhancedCountdownTimer from "@/components/EnhancedCountdownTimer";

@@ -1,9 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StorageService, StorageError, StorageValidationError } from './StorageService';
 
-/**
- * AsyncStorage implementation of StorageService
- */
 export class AsyncStorageService implements StorageService {
   private readonly keyPrefix: string;
 

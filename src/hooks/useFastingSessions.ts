@@ -22,6 +22,8 @@ export const useFastingSessions = (): UseFastingSessionsReturn => {
       setLoading(true);
       setError(null);
       const loadedSessions = await FastingSessionService.getAllSessions();
+      console.log("🚀 ~ useFastingSessions ~ loadedSessions:", loadedSessions)
+
       setSessions(loadedSessions);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load sessions');
