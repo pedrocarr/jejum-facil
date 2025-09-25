@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { Button, Card, TextInput } from 'react-native-paper';
+import { Button, Card, TextInput, Portal, Dialog } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FastingSession } from '@/types/fasting';
 import { formatTime, formatDuration, getSessionProgress } from '@/utils/fasting';
@@ -12,6 +12,10 @@ export default function SavePlan() {
   const [rating, setRating] = useState<number | null>(null);
   const [notes, setNotes] = useState<string>('');
   const [saving, setSaving] = useState(false);
+  const [successDialogVisible, setSuccessDialogVisible] = useState(false);
+  const [errorDialogVisible, setErrorDialogVisible] = useState(false);
+  const [discardDialogVisible, setDiscardDialogVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -26,8 +30,8 @@ export default function SavePlan() {
         setRating(sessionData.rating || null);
       } catch (error) {
         console.error('Error parsing session data:', error);
-        Alert.alert('Erro', 'Dados da sessão inválidos');
-        router.back();
+        setErrorMessage('Dados da sessão inválidos');
+        setErrorDialogVisible(true);
       }
     }
   }, [params.sessionData, router]);
@@ -46,41 +50,30 @@ export default function SavePlan() {
       };
 
       await saveSession(updatedSession);
-
-      Alert.alert(
-        'Sucesso!',
-        'Sua sessão de jejum foi salva com sucesso!',
-        [
-          {
-            text: 'OK',
-            onPress: () => router.replace('/(tabs)/fasting'),
-          },
-        ]
-      );
+      setSuccessDialogVisible(true);
     } catch (error) {
       console.error('Error saving session:', error);
-      Alert.alert('Erro', 'Não foi possível salvar a sessão');
+      setErrorMessage('Não foi possível salvar a sessão');
+      setErrorDialogVisible(true);
     } finally {
       setSaving(false);
     }
   };
 
   const handleDiscard = () => {
-    Alert.alert(
-      'Descartar Sessão',
-      'Tem certeza que deseja descartar esta sessão? Esta ação não pode ser desfeita.',
-      [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-        {
-          text: 'Descartar',
-          style: 'destructive',
-          onPress: () => router.replace('/(tabs)/fasting'),
-        },
-      ]
-    );
+    setDiscardDialogVisible(true);
+  };
+
+  const confirmDiscard = () => {
+    setDiscardDialogVisible(false);
+    router.replace('/(tabs)/fasting');
+  };
+
+  const handleErrorDialogDismiss = () => {
+    setErrorDialogVisible(false);
+    if (errorMessage === 'Dados da sessão inválidos') {
+      router.back();
+    }
   };
 
   const renderStars = () => {
@@ -261,6 +254,76 @@ export default function SavePlan() {
           </Button>
         </View>
       </View>
+
+      {/* Success Dialog */}
+      <Portal>
+        <Dialog
+          visible={successDialogVisible}
+          onDismiss={() => setSuccessDialogVisible(false)}
+        >
+          <Dialog.Title style={styles.dialogTitle}>Sucesso!</Dialog.Title>
+          <Dialog.Content>
+            <Text>Sua sessão de jejum foi salva com sucesso!</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              mode="contained"
+              onPress={() => {
+                setSuccessDialogVisible(false);
+                router.replace('/(tabs)/fasting');
+              }}
+            >
+              OK
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
+      {/* Error Dialog */}
+      <Portal>
+        <Dialog
+          visible={errorDialogVisible}
+          onDismiss={handleErrorDialogDismiss}
+        >
+          <Dialog.Title style={styles.dialogTitle}>Erro</Dialog.Title>
+          <Dialog.Content>
+            <Text>{errorMessage}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              mode="contained"
+              onPress={handleErrorDialogDismiss}
+            >
+              OK
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
+      {/* Discard Confirmation Dialog */}
+      <Portal>
+        <Dialog
+          visible={discardDialogVisible}
+          onDismiss={() => setDiscardDialogVisible(false)}
+        >
+          <Dialog.Title style={styles.dialogTitle}>Descartar Sessão</Dialog.Title>
+          <Dialog.Content>
+            <Text>Tem certeza que deseja descartar esta sessão? Esta ação não pode ser desfeita.</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setDiscardDialogVisible(false)}>
+              Cancelar
+            </Button>
+            <Button
+              mode="contained"
+              onPress={confirmDiscard}
+              style={styles.discardButton}
+            >
+              Descartar
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </ScrollView>
   );
 }
@@ -269,5 +332,13 @@ const styles = StyleSheet.create({
   actionButtons: {
     margin: 2,
     paddingHorizontal: 8
+  },
+  dialogTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  discardButton: {
+    backgroundColor: '#ef4444',
   },
 });
