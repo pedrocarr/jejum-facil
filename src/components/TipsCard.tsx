@@ -9,7 +9,7 @@ type TipsProps = {
 
 export default function TipsCard(props: TipsProps) {
   return (
-    <View className="bg-white m-2 p-4 rounded-lg shadow-md">
+    <View className="bg-white m-[8px] p-4 rounded-lg shadow-md">
       <Text className="text-lg font-bold mb-2">
         {props.emoji} {props.title}:
       </Text>

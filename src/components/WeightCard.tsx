@@ -1,23 +1,93 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
-import { Portal, Dialog, Button, Divider, TextInput } from 'react-native-paper';
+import { Portal, Dialog, Button, Divider, TextInput } from 'react-native-paper'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
+type WeightEntry = {
+  id: number;
+  weight: number;
+  date: Date;
+}
 
-
+const WEIGHT_STORAGE_KEY = '@weight_entries';
 
 const WeightCard = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [weight, setWeight] = useState<number | null>(null);
+  const [weightEntries, setWeightEntries] = useState<WeightEntry[]>([]);
+  const [currentWeight, setCurrentWeight] = useState<string>('');
 
-  const dismissEndFasting = () => {
-    setDialogVisible(false);
-  }
+  useEffect(() => {
+    loadWeightEntries();
+  }, []);
 
-  const confirmEndFasting = () => {
-    // Logic to end fasting goes here
+  const loadWeightEntries = async () => {
+    try {
+      const storedEntries = await AsyncStorage.getItem(WEIGHT_STORAGE_KEY);
+      if (storedEntries) {
+        const parsedEntries = JSON.parse(storedEntries).map((entry: any) => ({
+          ...entry,
+          date: new Date(entry.date)
+        }));
+        setWeightEntries(parsedEntries);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar pesos:', error);
+    }
+  };
+
+  const saveWeightEntries = async (entries: WeightEntry[]) => {
+    try {
+      await AsyncStorage.setItem(WEIGHT_STORAGE_KEY, JSON.stringify(entries));
+    } catch (error) {
+      console.error('Erro ao salvar peso:', error);
+    }
+  };
+
+  const formatDate = (date: Date) => {
+    const today = new Date();
+    const isToday =
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear();
+
+    if (isToday) {
+      return 'Hoje';
+    } else {
+      return date.toLocaleDateString('pt-BR');
+    }
+  };
+
+  const getLatestWeight = () => {
+    if (weightEntries.length === 0) return null;
+    return weightEntries.sort((a, b) => b.date.getTime() - a.date.getTime())[0];
+  };
+
+  const latestEntry = getLatestWeight();
+
+  const dismissDialog = () => {
     setDialogVisible(false);
-  }
+    setCurrentWeight('');
+  };
+
+  const confirmSaveWeight = async () => {
+    const weightValue = parseFloat(currentWeight);
+    if (isNaN(weightValue) || weightValue <= 0) {
+      dismissDialog();
+      return;
+    }
+
+    const newEntry: WeightEntry = {
+      id: Date.now(),
+      weight: weightValue,
+      date: new Date()
+    };
+
+    const updatedEntries = [newEntry, ...weightEntries];
+    setWeightEntries(updatedEntries);
+    await saveWeightEntries(updatedEntries);
+    dismissDialog();
+  };
 
   return (
     <>
@@ -30,20 +100,21 @@ const WeightCard = () => {
             <MaterialCommunityIcons name="plus-circle" color="#c0c0c0" size={30} />
           </TouchableOpacity>
         </View>
-          {weight === null ? (
+          {latestEntry === null ? (
             <>
             <Text className="text-gray-500 text-center m-2">Nenhum peso registrado</Text>
             <Divider style={styles.divider}></Divider>
             </>
           ) : (
             <>
-            <Text className="text-2xl text-center m-2">{weight} kg</Text>
+            <Text className="text-2xl text-center m-2">{latestEntry.weight} kg</Text>
+            <Text className="text-sm text-gray-500 text-center mb-2">{formatDate(latestEntry.date)}</Text>
             <Divider style={styles.divider}></Divider>
             </>
           )}
       </View>
       <Portal>
-        <Dialog visible={dialogVisible} onDismiss={dismissEndFasting}>
+        <Dialog visible={dialogVisible} onDismiss={dismissDialog}>
           <Dialog.Title style={styles.dialogTitle}>
             Registrar Peso
           </Dialog.Title>
@@ -51,19 +122,17 @@ const WeightCard = () => {
             <TextInput className="text-xl"
               label="Peso (kg)"
               keyboardType="numeric"
-              value={weight !== null ? weight.toString() : ''}
-              onChangeText={text => {
-                setWeight(text ? parseFloat(text) : null);
-              }}
+              value={currentWeight}
+              onChangeText={setCurrentWeight}
               placeholder="Ex: 70.5"
               mode="outlined"
               style={{ backgroundColor: 'white' }}>
             </TextInput>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={dismissEndFasting}>Não</Button>
-            <Button style={styles.confirmButton} onPress={confirmEndFasting} mode="contained">
-              Sim
+            <Button onPress={dismissDialog}>Cancelar</Button>
+            <Button style={styles.confirmButton} onPress={confirmSaveWeight} mode="contained">
+              Salvar
             </Button>
           </Dialog.Actions>
         </Dialog>

@@ -1,14 +1,17 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, TouchableOpacity, Text, StyleSheet, TextInput, FlatList } from 'react-native'
 import { Portal, Dialog, Button } from 'react-native-paper'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type Note = {
   id: number;
   text: string;
   date: Date;
 }
+
+const NOTES_STORAGE_KEY = '@notes';
 
 const NotesCard = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -19,6 +22,33 @@ const NotesCard = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
+
+  useEffect(() => {
+    loadNotes();
+  }, []);
+
+  const loadNotes = async () => {
+    try {
+      const storedNotes = await AsyncStorage.getItem(NOTES_STORAGE_KEY);
+      if (storedNotes) {
+        const parsedNotes = JSON.parse(storedNotes).map((note: any) => ({
+          ...note,
+          date: new Date(note.date)
+        }));
+        setNotes(parsedNotes);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar notas:', error);
+    }
+  };
+
+  const saveNotesToStorage = async (updatedNotes: Note[]) => {
+    try {
+      await AsyncStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(updatedNotes));
+    } catch (error) {
+      console.error('Erro ao salvar notas:', error);
+    }
+  };
 
   const showDatePicker = () => setDatePickerVisibility(true);
   const hideDatePicker = () => setDatePickerVisibility(false);
@@ -66,17 +96,17 @@ const NotesCard = () => {
     setDialogVisible(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (text.trim().length === 0) {
       setDialogVisible(false);
       return;
     }
 
+    let updatedNotes: Note[];
+
     if (editingNoteId !== null) {
-      setNotes((prev) =>
-        prev.map((note) =>
-          note.id === editingNoteId ? { ...note, text, date: selectedDate } : note
-        )
+      updatedNotes = notes.map((note) =>
+        note.id === editingNoteId ? { ...note, text, date: selectedDate } : note
       );
     } else {
       const newNote: Note = {
@@ -84,8 +114,11 @@ const NotesCard = () => {
         text,
         date: selectedDate,
       };
-      setNotes((prev) => [newNote, ...prev]);
+      updatedNotes = [newNote, ...notes];
     }
+
+    setNotes(updatedNotes);
+    await saveNotesToStorage(updatedNotes);
 
     setDialogVisible(false);
     setText('');
@@ -169,11 +202,12 @@ const NotesCard = () => {
           <Dialog.Actions>
             {editingNoteId && (
               <Button
-                onPress={() => {
-                  setNotes((prev) => prev.filter((note) => note.id !== editingNoteId));
+                onPress={async () => {
+                  const updatedNotes = notes.filter((note) => note.id !== editingNoteId);
+                  setNotes(updatedNotes);
+                  await saveNotesToStorage(updatedNotes);
                   handleCancel();
-                  }
-                }
+                }}
                 style={{ marginRight: 'auto' }}
               >
                 Excluir

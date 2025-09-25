@@ -270,8 +270,9 @@ export default function SavePlan() {
               mode="contained"
               onPress={() => {
                 setSuccessDialogVisible(false);
-                router.replace('/(tabs)/fasting');
+                router.replace('/(tabs)/dashboard');
               }}
+              style={{ width: 80 }}
             >
               OK
             </Button>
