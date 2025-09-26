@@ -1,4 +1,4 @@
-import { tips } from "@/consts";
+import { tips } from "@/types/constants";
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, Alert, Text } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";

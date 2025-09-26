@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, Animated } from 'react-native';
 import { formatTime, formatDuration } from '@/utils/fasting';
 import { TIMER_COLORS, ANIMATION_DURATIONS } from '@/types/constants';
-import { getProgressGradient, getCelebrationAnimation } from '@/utils/animations';
+import { getCelebrationAnimation } from '@/utils/animations';
 
 interface FlexibleTimerProps {
   startTime: number;
@@ -171,7 +171,7 @@ const FlexibleTimer: React.FC<FlexibleTimerProps> = ({
 
       {/* Progress indicators */}
       <View className="flex-row mt-6 space-x-2">
-        {milestones.slice(0, 4).map((milestone, index) => (
+        {milestones.map((milestone, index) => (
           <View
             key={milestone}
             className={`w-3 h-3 rounded-full ${
@@ -186,7 +186,7 @@ const FlexibleTimer: React.FC<FlexibleTimerProps> = ({
       </View>
 
       <Text className="text-xs text-gray-500 mt-2">
-        1h • 2h • 4h • 8h
+        1h • 2h • 4h • 8h • 12h • 16h • 20h • 24h
       </Text>
     </View>
   );

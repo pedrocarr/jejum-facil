@@ -1,5 +1,5 @@
 import PlansCards from "@/components/PlansCards";
-import { advancedPlans, beginnerPlans, intermediatePlans, pronlongedFastingPlans } from "@/consts";
+import { advancedPlans, beginnerPlans, intermediatePlans, pronlongedFastingPlans } from "@/types/constants";
 import { useState } from "react";
 import { ScrollView, View, SafeAreaView, Text } from "react-native";
 import { SegmentedButtons, Dialog, Portal, Button } from "react-native-paper";

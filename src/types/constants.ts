@@ -44,3 +44,173 @@ export const TIMER_MILESTONES = {
   THREE_QUARTER: 0.75,
   COMPLETE: 1
 } as const;
+
+// Fasting Plans
+export type FastingPlans = Array<Record<string, string>>
+
+export const beginnerPlans: FastingPlans = [
+  {
+    id: 'bg-1',
+    title: "11:13",
+    fastingDescription: "11 horas de jejum",
+    feedingDescription: "13 horas de alimentação"
+  },
+  {
+    id: 'bg-2',
+    title: "12:12",
+    fastingDescription: "12 horas de jejum",
+    feedingDescription: "12 horas de alimentação"
+  },
+  {
+    id: 'bg-3',
+    title: "13:11",
+    fastingDescription: "13 horas de jejum",
+    feedingDescription: "11 horas de alimentação"
+  },
+  {
+    id: 'bg-4',
+    title: "14:10",
+    fastingDescription: "14 horas de jejum",
+    feedingDescription: "10 horas de alimentação"
+  },
+  {
+    id: 'bg-5',
+    title: "15:9",
+    fastingDescription: "15 horas de jejum",
+    feedingDescription: "9 horas de alimentação"
+  },
+];
+
+export const intermediatePlans: FastingPlans = [
+  {
+    id: 'intermediate-1',
+    title: "16:8",
+    fastingDescription: "16 horas de jejum",
+    feedingDescription: "8 horas de alimentação"
+  },
+  {
+    id: 'intermediate-2',
+    title: "17:7",
+    fastingDescription: "17 horas de jejum",
+    feedingDescription: "7 horas de alimentação"
+  },
+  {
+    id: 'intermediate-3',
+    title: "18:6",
+    fastingDescription: "18 horas de jejum",
+    feedingDescription: "6 horas de alimentação"
+  },
+  {
+    id: 'intermediate-4',
+    title: "19:5",
+    fastingDescription: "19 horas de jejum",
+    feedingDescription: "5 horas de alimentação"
+  },
+];
+
+export const advancedPlans: FastingPlans = [
+  {
+    id: 'advanced-1',
+    title: "20:4",
+    fastingDescription: "20 horas de jejum",
+    feedingDescription: "4 horas de alimentação"
+  },
+  {
+    id: 'advanced-2',
+    title: "21:3",
+    fastingDescription: "21 horas de jejum",
+    feedingDescription: "3 horas de alimentação"
+  },
+  {
+    id: 'advanced-3',
+    title: "22:2",
+    fastingDescription: "22 horas de jejum",
+    feedingDescription: "2 horas de alimentação"
+  },
+  {
+    id: 'advanced-4',
+    title: "23:1",
+    fastingDescription: "23 horas de jejum",
+    feedingDescription: "1 horas de alimentação"
+  },
+];
+
+export const pronlongedFastingPlans: FastingPlans = [
+  {
+    id: 'prolonged-1',
+    title: "24h",
+    fastingDescription: "24 horas de jejum",
+  },
+  {
+    id: 'prolonged-2',
+    title: "36h",
+    fastingDescription: "36 horas de jejum",
+  },
+  {
+    id: 'prolonged-3',
+    title: "42h",
+    fastingDescription: "42 horas de jejum",
+  },
+  {
+    id: 'prolonged-4',
+    title: "48h",
+    fastingDescription: "48 horas de jejum",
+  },
+  {
+    id: 'prolonged-5',
+    title: "72h",
+    fastingDescription: "72 horas de jejum",
+  },
+];
+
+// Tips
+export const tips: Array<Record<string, string>> = [
+  {
+    id: 'tips-1',
+    title: "Mantenha-se hidratado",
+    content: "Beba bastante água durante o jejum para manter-se hidratado.",
+    emoji: "💧"
+  },
+  {
+    id: 'tips-2',
+    title: "Cuidado ao se realimentar",
+    content: "Evite alimentos processados e ricos em açúcar durante o período de alimentação.",
+    emoji: "🥗"
+  },
+  {
+    id: 'tips-3',
+    title: "Tenha uma alimentação balanceada",
+    content: "Inclua alimentos ricos em fibras, como frutas, vegetais e grãos integrais, para ajudar na saciedade.",
+    emoji: "🍎"
+  },
+  {
+    id: 'tips-4',
+    title: "Descanse longe de telas",
+    content: "Durma bem, pois o sono adequado é essencial para o sucesso do jejum.",
+    emoji: "😴"
+  },
+  {
+    id: 'tips-5',
+    title: "Comece devagar",
+    content: "Comece com jejuns mais curtos e aumente gradualmente a duração conforme seu corpo se adapta.",
+    emoji: "🐢"
+  },
+  {
+    id: 'tips-6',
+    title: "Ouça seu corpo",
+    content: "Ouça seu corpo e interrompa o jejum se sentir tonturas, fraqueza extrema ou outros sintomas preocupantes.",
+    emoji: "👂"
+  },
+  {
+    id: 'tips-7',
+    title: "Faça atividades",
+    content: "Mantenha-se ocupado durante o período de jejum para evitar pensar em comida.",
+    emoji: "🎯"
+  },
+  {
+    id: 'tips-8',
+    title: "Consulte seu médico",
+    content: "Consulte um profissional de saúde antes de iniciar qualquer regime de jejum, especialmente se tiver condições médicas preexistentes.",
+    emoji: "👩‍⚕️"
+  }
+];

@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import Svg, { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { formatTime } from '@/utils/fasting';
-import { getProgressGradient, getCelebrationAnimation, getMilestonePositions } from '@/utils/animations';
+import { getProgressGradient, getCelebrationAnimation } from '@/utils/animations';
 import { TIMER_COLORS, TIMER_MILESTONES } from '@/types/constants';
 
 interface EnhancedCountdownTimerProps {
@@ -29,9 +29,6 @@ const EnhancedCountdownTimer: React.FC<EnhancedCountdownTimerProps> = ({
   const [celebrationAnimation, setCelebrationAnimation] = useState<any>(null);
 
   const gradientId = `gradient-${Math.random().toString(36).substr(2, 9)}`;
-
-  // Calculate milestone times
-  const milestonePositions = useMemo(() => getMilestonePositions(duration), [duration]);
 
   // Generate colors based on time progression
   const timerColors = useMemo(() => {
@@ -108,9 +105,6 @@ const EnhancedCountdownTimer: React.FC<EnhancedCountdownTimerProps> = ({
           {({ remainingTime, elapsedTime }) => {
             handleTimeUpdate(remainingTime);
 
-            const hours = Math.floor(remainingTime / 3600);
-            const minutes = Math.floor((remainingTime % 3600) / 60);
-            const seconds = remainingTime % 60;
             const progress = elapsedTime / duration;
 
             return (
