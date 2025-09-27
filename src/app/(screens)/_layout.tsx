@@ -34,6 +34,12 @@ export default function ScreensLayout() {
           headerTitleStyle: { color: "black", fontSize: 24 },
         }}
       />
+      <Stack.Screen name="cards-settings"
+      options={{
+          headerTitle: "Ativar/Desativar Cartões",
+          headerTitleStyle: { color: "black", fontSize: 24 },
+        }}
+      />
     </Stack>
   )
 }

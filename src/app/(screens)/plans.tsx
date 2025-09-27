@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ScrollView, View, SafeAreaView, Text } from "react-native";
 import { SegmentedButtons, Dialog, Portal, Button } from "react-native-paper";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
 
 
@@ -38,107 +39,109 @@ export default function Plans() {
 
   return (
     <>
-      <ScrollView
-        className="flex-1 bg-[#F0F8FF]"
-        contentContainerStyle={{ paddingBottom: 40 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <SafeAreaView className="flex-1 p-4 items-center">
-          <SegmentedButtons
-            value={segmentendButtonsvalue}
-            onValueChange={setsegmentendButtonsValue}
-            theme={{ colors: { primary: '#6200ee' } }}
-            buttons={[
-              {
-                value: 'planos',
-                label: 'Planos',
-                icon: 'view-list',
-                checkedColor: '#6200ee',
-                onPress: () => setsegmentendButtonsValue('planos'),
-              },
-              {
-                value: 'personalizado',
-                label: 'Personalizado',
-                icon: 'account-cog',
-                checkedColor: '#6200ee',
-                onPress: () => setsegmentendButtonsValue('personalizado'),
-              },
-            ]}
-          />
-        </SafeAreaView>
-        {segmentendButtonsvalue === 'planos' && (
-          <View className="p-2">
-            <Text className="text-lg mb-4 ml-2 font-bold">Flexível</Text>
-            <View className="mb-4">
-              <PlansCards
-                id="flexivel"
-                title="Flexível"
-                fastingDescription="Jejue o tempo que que quiser"
-                onPress={() => handlePlanPress({
-                  id: "flexivel",
-                  title: "Flexível",
-                  fastingDescription: "Jejue o tempo que que quiser"
-                })}
-              />
+      <View className="flex-1 bg-[#F0F8FF]">
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 40 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <SafeAreaView className="flex-1 p-4 items-center">
+            <SegmentedButtons
+              value={segmentendButtonsvalue}
+              onValueChange={setsegmentendButtonsValue}
+              theme={{ colors: { primary: '#6200ee' } }}
+              buttons={[
+                {
+                  value: 'planos',
+                  label: 'Planos',
+                  icon: 'view-list',
+                  checkedColor: '#6200ee',
+                  onPress: () => setsegmentendButtonsValue('planos'),
+                },
+                {
+                  value: 'personalizado',
+                  label: 'Personalizado',
+                  icon: 'account-cog',
+                  checkedColor: '#6200ee',
+                  onPress: () => setsegmentendButtonsValue('personalizado'),
+                },
+              ]}
+            />
+          </SafeAreaView>
+          {segmentendButtonsvalue === 'planos' && (
+            <View className="p-2">
+              <Text className="text-lg mb-4 ml-2 font-bold">Flexível</Text>
+              <View className="mb-4">
+                <PlansCards
+                  id="flexivel"
+                  title="Flexível"
+                  fastingDescription="Jejue o tempo que que quiser"
+                  onPress={() => handlePlanPress({
+                    id: "flexivel",
+                    title: "Flexível",
+                    fastingDescription: "Jejue o tempo que que quiser"
+                  })}
+                />
+              </View>
+              <Text className="text-lg mb-4 ml-2 font-bold">Planos para iniciantes</Text>
+              <View className="flex flex-row flex-wrap justify-between">
+                {beginnerPlans.map((plan) => (
+                  <View key={plan.id} className="w-[50%] mb-4">
+                    <PlansCards
+                      id={plan.id}
+                      title={plan.title}
+                      fastingDescription={plan.fastingDescription}
+                      feedingDescription={plan.feedingDescription}
+                      onPress={() => handlePlanPress(plan)}
+                    />
+                  </View>
+                ))}
+              </View>
+              <Text className="text-lg mb-4 ml-2 font-bold">Planos intermediários</Text>
+              <View className="flex flex-row flex-wrap justify-between">
+                {intermediatePlans.map((plan) => (
+                  <View key={plan.id} className="w-[50%] mb-4">
+                    <PlansCards
+                      id={plan.id}
+                      title={plan.title}
+                      fastingDescription={plan.fastingDescription}
+                      feedingDescription={plan.feedingDescription}
+                      onPress={() => handlePlanPress(plan)}
+                    />
+                  </View>
+                ))}
+              </View>
+              <Text className="text-lg mb-4 ml-2 font-bold">Planos avançados</Text>
+              <View className="flex flex-row flex-wrap justify-between">
+                {advancedPlans.map((plan) => (
+                  <View key={plan.id} className="w-[50%] mb-4">
+                    <PlansCards
+                      id={plan.id}
+                      title={plan.title}
+                      fastingDescription={plan.fastingDescription}
+                      feedingDescription={plan.feedingDescription}
+                      onPress={() => handlePlanPress(plan)}
+                    />
+                  </View>
+                ))}
+              </View>
+              <Text className="text-lg mb-4 ml-2 font-bold">Jejum pronlogado</Text>
+              <View className="flex flex-row flex-wrap justify-between">
+                {pronlongedFastingPlans.map((plan) => (
+                  <View key={plan.id} className="w-[50%] mb-4">
+                    <PlansCards
+                      id={plan.id}
+                      title={plan.title}
+                      fastingDescription={plan.fastingDescription}
+                      onPress={() => handlePlanPress(plan)}
+                    />
+                  </View>
+                ))}
+              </View>
             </View>
-            <Text className="text-lg mb-4 ml-2 font-bold">Planos para iniciantes</Text>
-            <View className="flex flex-row flex-wrap justify-between">
-              {beginnerPlans.map((plan) => (
-                <View key={plan.id} className="w-[50%] mb-4">
-                  <PlansCards
-                    id={plan.id}
-                    title={plan.title}
-                    fastingDescription={plan.fastingDescription}
-                    feedingDescription={plan.feedingDescription}
-                    onPress={() => handlePlanPress(plan)}
-                  />
-                </View>
-              ))}
-            </View>
-            <Text className="text-lg mb-4 ml-2 font-bold">Planos intermediários</Text>
-            <View className="flex flex-row flex-wrap justify-between">
-              {intermediatePlans.map((plan) => (
-                <View key={plan.id} className="w-[50%] mb-4">
-                  <PlansCards
-                    id={plan.id}
-                    title={plan.title}
-                    fastingDescription={plan.fastingDescription}
-                    feedingDescription={plan.feedingDescription}
-                    onPress={() => handlePlanPress(plan)}
-                  />
-                </View>
-              ))}
-            </View>
-            <Text className="text-lg mb-4 ml-2 font-bold">Planos avançados</Text>
-            <View className="flex flex-row flex-wrap justify-between">
-              {advancedPlans.map((plan) => (
-                <View key={plan.id} className="w-[50%] mb-4">
-                  <PlansCards
-                    id={plan.id}
-                    title={plan.title}
-                    fastingDescription={plan.fastingDescription}
-                    feedingDescription={plan.feedingDescription}
-                    onPress={() => handlePlanPress(plan)}
-                  />
-                </View>
-              ))}
-            </View>
-            <Text className="text-lg mb-4 ml-2 font-bold">Jejum pronlogado</Text>
-            <View className="flex flex-row flex-wrap justify-between">
-              {pronlongedFastingPlans.map((plan) => (
-                <View key={plan.id} className="w-[50%] mb-4">
-                  <PlansCards
-                    id={plan.id}
-                    title={plan.title}
-                    fastingDescription={plan.fastingDescription}
-                    onPress={() => handlePlanPress(plan)}
-                  />
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
-      </ScrollView>
+          )}
+        </ScrollView>
+        <StatusBar style="light" />
+      </View>
       <Portal>
         <Dialog visible={dialogVisible} onDismiss={cancelPlanSelection}>
           <Dialog.Title>Confirmar Seleção de Plano</Dialog.Title>

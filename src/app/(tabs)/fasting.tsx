@@ -39,8 +39,6 @@ export default function Fasting() {
   });
 
   function handleSessionComplete(session: FastingSession) {
-    // For now, just navigate to save screen
-    // In Phase 3, we'll implement proper persistence
     router.push({
       pathname: "/save-plan",
       params: {
