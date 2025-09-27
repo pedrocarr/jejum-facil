@@ -25,7 +25,6 @@ export function CardsProvider({ children }: CardsProviderProps) {
   const [showWeightCard, setShowWeightCardState] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load settings from AsyncStorage on mount
   useEffect(() => {
     loadSettings();
   }, []);

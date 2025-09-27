@@ -47,13 +47,8 @@ export default function Fasting() {
     });
   }
 
-  function handleMilestone(milestone: number, duration: number) {
-    // Show milestone celebration
-    const message = timerState.isFlexible
-      ? `🎉 ${formatDuration(duration)} de jejum!`
-      : `🎯 ${Math.round(milestone * 100)}% concluído!`;
-
-    // Could implement toast or notification here
+  function handleMilestone(milestone: number) {
+    const message = `🎯 ${Math.round(milestone * 100)}% concluído!`;
     console.log('Milestone reached:', message);
   }
 

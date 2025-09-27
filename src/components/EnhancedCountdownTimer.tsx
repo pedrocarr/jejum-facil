@@ -32,8 +32,8 @@ const EnhancedCountdownTimer: React.FC<EnhancedCountdownTimerProps> = ({
 
   // Generate colors based on time progression
   const timerColors = useMemo(() => {
-    const colors = [];
-    const times = [];
+    const colors: string[] = [];
+    const times: number[] = [];
 
     // Create smooth color transitions
     for (let i = 0; i <= 1; i += 0.2) {
@@ -42,7 +42,10 @@ const EnhancedCountdownTimer: React.FC<EnhancedCountdownTimerProps> = ({
       times.push(duration * (1 - i));
     }
 
-    return { colors, times };
+    return {
+      colors: colors as any,
+      times: times as any
+    };
   }, [duration]);
 
   const handleTimeUpdate = (remainingTime: number) => {
@@ -50,7 +53,7 @@ const EnhancedCountdownTimer: React.FC<EnhancedCountdownTimerProps> = ({
     const progress = elapsed / duration;
 
     // Check for milestones
-    Object.entries(TIMER_MILESTONES).forEach(([key, value]) => {
+    Object.entries(TIMER_MILESTONES).forEach(([, value]) => {
       if (progress >= value && currentMilestone !== value) {
         setCurrentMilestone(value);
         onMilestone?.(value);
