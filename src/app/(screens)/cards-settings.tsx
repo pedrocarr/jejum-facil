@@ -1,23 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Switch } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
-import { useRouter } from 'expo-router';
+import { useCards } from '@/contexts/CardsContext';
 
 export default function CardsSettings() {
-  const [showNotesCard, setShowNotesCard] = useState(true);
-  const [showWeightCard, setShowWeightCard] = useState(true);
-  const router = useRouter();
-
-
-  const toggleNotesCard = () => {
-    setShowNotesCard(previousState => !previousState);
-    setTimeout(() => {
-      router.setParams({
-        toggleNoteCard: JSON.stringify(!showNotesCard)
-      });
-    }, 100);
-  }
+  const { showNotesCard, showWeightCard, setShowNotesCard, setShowWeightCard } = useCards();
 
 
 
@@ -37,7 +25,7 @@ export default function CardsSettings() {
             </View>
             <Switch
               value={showNotesCard}
-              onValueChange={toggleNotesCard}
+              onValueChange={setShowNotesCard}
               thumbColor={showNotesCard ? '#663399' : '#f4f3f4'}
               trackColor={{ false: '#767577', true: '#663399' }}
             />
