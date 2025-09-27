@@ -1,7 +1,7 @@
 import { tips } from "@/types/constants";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, ScrollView, Alert, Text } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 import FastingPlanSelected from "@/components/FastingPlanSelected";
 import EnhancedCountdownTimer from "@/components/EnhancedCountdownTimer";
 import FlexibleTimer from "@/components/FlexibleTimer";
@@ -11,17 +11,12 @@ import { Dialog, Portal, Button } from "react-native-paper";
 import { useFastingTimer } from "@/hooks/useFastingTimer";
 import { FastingSession } from "@/types/fasting";
 import { formatDuration } from "@/utils/fasting";
+import { usePlans } from "@/contexts/PlansContext";
 
 export default function Fasting() {
-  const [selectedPlan, setSelectedPlan] = useState({
-    id: "flexivel",
-    title: "Flexível",
-    fastingDescription: "Jejue o tempo que que quiser"
-  });
+  const { selectedPlan } = usePlans()
   const [dialogVisible, setDialogVisible] = useState(false);
-
   const router = useRouter();
-  const params = useLocalSearchParams();
 
   const {
     timerState,
@@ -73,19 +68,6 @@ export default function Fasting() {
       Alert.alert('Erro', 'Erro ao parar o jejum');
     }
   };
-
-  useEffect(() => {
-    if (params.selectedPlan) {
-      try {
-        const planData = JSON.parse(params.selectedPlan as string);
-        setSelectedPlan(planData);
-        router.setParams({ selectedPlan: undefined });
-      } catch (error) {
-        console.error('Error parsing selected plan:', error);
-        Alert.alert('Erro', 'Erro ao carregar plano selecionado');
-      }
-    }
-  }, [params.selectedPlan, router]);
 
   const renderTimer = () => {
     if (timerState.isFlexible && timerState.startTime) {

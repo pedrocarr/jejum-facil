@@ -102,9 +102,6 @@ export class AsyncStorageService implements StorageService {
     }
   }
 
-  /**
-   * Get multiple items at once
-   */
   async getMultiple<T>(keys: string[]): Promise<Record<string, T | null>> {
     try {
       const fullKeys = keys.map(key => this.getFullKey(key));
@@ -134,9 +131,6 @@ export class AsyncStorageService implements StorageService {
     }
   }
 
-  /**
-   * Set multiple items at once
-   */
   async setMultiple<T>(items: Record<string, T>): Promise<void> {
     try {
       const keyValuePairs: [string, string][] = Object.entries(items).map(([key, value]) => [

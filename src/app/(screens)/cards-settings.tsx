@@ -7,9 +7,6 @@ import { useCards } from '@/contexts/CardsContext';
 export default function CardsSettings() {
   const { showNotesCard, showWeightCard, setShowNotesCard, setShowWeightCard } = useCards();
 
-
-
-
   return (
     <View className="flex-1 bg-[#F0F8FF]">
       <ScrollView className="flex-1 px-4 pt-6">
@@ -17,10 +14,10 @@ export default function CardsSettings() {
           <View className="flex-row justify-between items-center">
             <View className="flex-1">
               <Text className="text-lg font-semibold text-gray-800 mb-1">
-                Anotações
+                Notas
               </Text>
               <Text className="text-sm text-gray-600">
-                Exibir o card para adicionar e visualizar suas anotações diárias
+                Exibir o cartão para adicionar e visualizar suas anotações diárias
               </Text>
             </View>
             <Switch

@@ -5,6 +5,7 @@ import { ScrollView, View, SafeAreaView, Text } from "react-native";
 import { SegmentedButtons, Dialog, Portal, Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { usePlans } from "@/contexts/PlansContext";
 
 
 
@@ -13,6 +14,7 @@ export default function Plans() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [pendingPlan, setPendingPlan] = useState(null);
   const router = useRouter();
+  const { setSelectedPlan  } = usePlans()
 
   const handlePlanPress = (plan) => {
     setPendingPlan(plan);
@@ -22,11 +24,7 @@ export default function Plans() {
   const confirmPlanSelection = () => {
     if (pendingPlan) {
       router.back();
-      setTimeout(() => {
-        router.setParams({
-          selectedPlan: JSON.stringify(pendingPlan)
-        });
-      }, 100);
+      setSelectedPlan(pendingPlan)
     }
     setDialogVisible(false);
     setPendingPlan(null);
